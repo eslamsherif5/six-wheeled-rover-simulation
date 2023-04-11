@@ -1,35 +1,54 @@
+#!/usr/bin/python3
+
 from rover_defs import *
 
-def simulation(V_d, w_d, dims, q, q_dot, wq, wq_dot, t, dt):
-    
-    if w_d == 0.0 or V_d == 0.0:
-        return
-
-    # Radius of rotation (desired)
-    R_d = V_d/w_d
-    
+def update_jacobians(dims, q, wq):
     ## wheels 1,2 ##
     J_1 = np.zeros([6, 4])
     J_2 = np.zeros([6, 4])
-    J_1 = upate_jacobian_12(1, dims, q, wq)
+
+    J_1 = upate_jacobian_12(1, dims, q, wq)    
     J_2 = upate_jacobian_12(2, dims, q, wq)
-    wheel12(V_d, R_d, 1, dims, q, q_dot, wq_dot, J_1)
-    wheel12(V_d, R_d, 2, dims, q, q_dot, wq_dot, J_2)
     
     ## wheels 3, 4, 5, 6 ##
     J_3 = np.zeros([6, 5])
     J_4 = np.zeros([6, 5])
     J_5 = np.zeros([6, 5])
     J_6 = np.zeros([6, 5])
+    
     J_3 = upate_jacobian_3456(3, dims, q, wq)
     J_4 = upate_jacobian_3456(4, dims, q, wq)
     J_5 = upate_jacobian_3456(5, dims, q, wq)
     J_6 = upate_jacobian_3456(6, dims, q, wq)
-    wheel3456(V_d, 3, dims, q, q_dot, wq, wq_dot, J_3)
-    wheel3456(V_d, 4, dims, q, q_dot, wq, wq_dot, J_4)
-    wheel3456(V_d, 5, dims, q, q_dot, wq, wq_dot, J_5)
-    wheel3456(V_d, 6, dims, q, q_dot, wq, wq_dot, J_6)
+    
+    return [J_1, J_2, J_3, J_4, J_5, J_6]
 
+
+def update_refs(V_d, w_d, dims, q, q_dot, wq, wq_dot, J):
+    whl1_ref = wheel12(V_d, w_d, 1, dims, q, q_dot, wq_dot, J[0])    # [theta_dot_d, psi_d]
+    whl2_ref = wheel12(V_d, w_d, 2, dims, q, q_dot, wq_dot, J[1])    # [theta_dot_d, psi_d]
+    whl3_ref = wheel3456(V_d, 3, dims, q, q_dot, wq, wq_dot, J[2])   # [theta_dot_d]
+    whl4_ref = wheel3456(V_d, 4, dims, q, q_dot, wq, wq_dot, J[3])   # [theta_dot_d]
+    whl5_ref = wheel3456(V_d, 5, dims, q, q_dot, wq, wq_dot, J[4])   # [theta_dot_d]
+    whl6_ref = wheel3456(V_d, 6, dims, q, q_dot, wq, wq_dot, J[5])   # [theta_dot_d]
+
+    return [whl1_ref, whl2_ref, whl3_ref, whl4_ref, whl5_ref, whl6_ref]
+
+
+def update(V_d, w_d, dims, q, q_dot, wq, wq_dot, t, dt):
+    # Read sensed angles (rho, beta1, beta2, alpha_dot, gamma1_dot, gamma2_dot)
+    # Hardware ->
+    
+    
+    
+    # Calculating jacobians for all wheels
+    J = update_jacobians(dims, q, wq)
+    
+    # Calculate reference points for wheels -> theta_dot_d (for all wheels), psi_d (for wheel 1,2)
+    # Calculate unsensed angles (psi1, psi2, delta_i) -> this step is implicitly done inside the desired values calculation
+    whl_refs = update_refs(V_d, w_d, dims, q, q_dot, wq, wq_dot, J)
+    
+    
 
 V_d = 1.0  # m/s, for the whole vehicle
 w_d = 1.0  # rad/s, for the whole vehicle
@@ -57,6 +76,10 @@ dims.k9 = 139.0*pi/180.0  # [rad]
 dims.l2 = 0.1208   # [m]
 # wheel radius
 dims.k10 = 0.065    # [m]
+# distance between rocker wheel and rocker joint
+dims.l_r = 0.313957
+# distance between bogie wheels' centers
+dims.l_b = 0.138
 
 # fl = 1    # front left
 # fr = 2    # front right

@@ -16,7 +16,7 @@ def J_x_psi(b, dims, rho):
 
 
 def J_x_theta(b, dims, rho, psi, delta):
-    return dims.k10*(b * sin(rho) * sin(delta) + cos(rho)+cos(psi * cos(delta)))
+    return dims.k10 * (b * sin(rho) * sin(delta) + cos(rho)+cos(psi * cos(delta)))
 
 
 def J_x_delta12(b, dims, rho, psi):
@@ -111,34 +111,35 @@ def J_pitch_beta2(b):
     return -0.5 * (b + 1)
 
 
-def delta():
+def delta12(dims, u_dot, alpha_dot, rho_curr):
+    
     return
 
 
-def psi_desired(R_d, whl_cfg, dims, rho):
+def psi_desired(R_d, whl_cfg, dims, rho_prev):
     if (whl_cfg == 1):
-        x_c = dims.k4 * cos(radians(rho)) + dims.k5 * sin(radians(rho))
+        x_c = dims.k4 * cos(radians(rho_prev)) + dims.k5 * sin(radians(rho_prev))
         x_R = dims.k2 - 0.5 * dims.k6 * \
-            (sin(dims.k9 - radians(rho) - pi/2.0) +
-             sin(dims.k9 - radians(radians(-rho)) - pi/2.0))
+            (sin(dims.k9 - radians(rho_prev) - pi/2.0) +
+             sin(dims.k9 - radians(radians(-rho_prev)) - pi/2.0))
     elif (whl_cfg == 2):
-        x_c = dims.k4 * cos(radians(-rho)) + dims.k5 * sin(radians(-rho))
+        x_c = dims.k4 * cos(radians(-rho_prev)) + dims.k5 * sin(radians(-rho_prev))
         x_R = dims.k2 - 0.5 * dims.k6 * \
-            (sin(dims.k9 - radians(-rho) - pi/2.0) +
-             sin(dims.k9 - radians(radians(rho)) - pi/2.0))
+            (sin(dims.k9 - radians(-rho_prev) - pi/2.0) +
+             sin(dims.k9 - radians(radians(rho_prev)) - pi/2.0))
 
     return atan((x_c - x_R)/(R_d - dims.k3))
 
 
 def upate_jacobian_12(whl_cfg, dims, q, wq):
-    J = np.zeros([6, 4])
-
-    b = (-1) ** whl_cfg
-
     if whl_cfg == 1:
         psi = q.curr.psi1
     elif whl_cfg == 2:
         psi = q.curr.psi2
+
+    b = (-1) ** whl_cfg
+
+    J = np.zeros([6, 4])
 
     # row 0
     J[0, 0] = -b * dims.k1
@@ -180,16 +181,16 @@ def upate_jacobian_12(whl_cfg, dims, q, wq):
 
 
 def upate_jacobian_3456(whl_cfg, dims, q, wq):
-    J = np.zeros([6, 5])
-
-    b = (-1) ** whl_cfg
-
     if whl_cfg == 3 or whl_cfg == 4:
         a = dims.k7
         sigma = q.curr.rho + q.curr.beta1 + wq.curr.delta
     elif whl_cfg == 5 or whl_cfg == 6:
         a = -dims.k7
         sigma = -q.curr.rho + q.curr.beta2 + wq.curr.delta
+
+    b = (-1) ** whl_cfg
+
+    J = np.zeros([6, 5])
 
     # row 0
     J[0, 0] = -b * dims.k1
@@ -238,28 +239,33 @@ def upate_jacobian_3456(whl_cfg, dims, q, wq):
     return J
 
 
-def wheel12(V_d, R_d, whl_cfg, dims, q, q_dot, wq_dot, J):
+def wheel12(V_d, w_d, whl_cfg, dims, q, q_dot, wq_dot, J):
     b = (-1) ** whl_cfg
-
-    psi_d = psi_desired(R_d, whl_cfg, dims, q.curr.rho)
     theta_dot_d = (V_d + b * dims.k1 * q_dot.prev.rho_dot -
                    J[0, 1] * q_dot.prev.psi_dot - J[0, 3] * wq_dot.prev.delta_dot) / J[0, 2]
+    
+    if w_d == 0.0 or V_d == 0.0:
+        return [theta_dot_d, 0.0]
 
-    return theta_dot_d, psi_d     # pass to control module
+    # Radius of rotation (desired)
+    R_d = V_d/w_d
+    psi_d = psi_desired(R_d, whl_cfg, dims, q.prev.rho)
+
+    return [theta_dot_d, psi_d]     # pass to control module
 
 
 def wheel3456(V_d, whl_cfg, dims, q, q_dot, wq, wq_dot, J):
-    b = (-1) ** whl_cfg
-
     if whl_cfg == 3 or whl_cfg == 4:
         sigma = q.curr.rho + q.curr.beta1 + wq.curr.delta
     elif whl_cfg == 5 or whl_cfg == 6:
         sigma = -q.curr.rho + q.curr.beta2 + wq.curr.delta
+    
+    b = (-1) ** whl_cfg
 
     theta_dot = (V_d + b * dims.k1 * q_dot.prev.rho_dot -
                  J[0, 1] * q_dot.prev.beta1_dot -
                  J[0, 2] * q_dot.prev.beta2_dot -
                  J[0, 4] * wq_dot.prev.delta_dot) / (dims.k10 * cos(sigma))
 
-    return theta_dot
+    return [theta_dot]
 
