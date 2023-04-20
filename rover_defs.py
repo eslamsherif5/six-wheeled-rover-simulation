@@ -111,24 +111,51 @@ def J_pitch_beta2(b):
     return -0.5 * (b + 1)
 
 
-def delta12(dims, u_dot, alpha_dot, rho_curr):
+def delta12(dims, u_dot, alpha_dot, alpha_curr, beta_curr, wq1, wq2, wq3):
+    if u_dot.curr.x == 0:
+        return [wq1.prev.delta]
     
-    return
+    r1 = dims.l_b * sin(pi/2 + wq3.curr.delta - alpha_curr) / sin(wq3.curr.delta - wq2.curr.delta)
+    r2 = dims.l_b * sin(pi/2 - wq3.curr.delta + alpha_curr) / sin(wq3.curr.delta - wq2.curr.delta)
+    d = abs(sqrt(dims.k7**2 + dims.k8**2))
+    lambda_angle = atan2(dims.k8, dims.k7)
+    r_B = sqrt(r2**2 + d**2 - 2*r2*d*cos(pi/2 + wq3.curr.delta - alpha_curr - lambda_angle))
+    v_B = r_B * alpha_dot
+    delta = acos(v_B/u_dot.curr.delta * cos(beta_curr - alpha_curr))
+    
+    return [delta]
+
+
+def delta3456(dims, u_dot1, u_dot2, alpha_dot, alpha_curr, wq1, wq2):
+    # output: [delta1, delta2] which correspond to [delta3, delta5] or [delta4, delta6]
+    if u_dot1.curr.x == 0 or u_dot2.curr.x == 0:
+        return [wq1.prev.delta, wq2.prev.delta]
+        
+    a = dims.l_b * alpha_dot / u_dot1.curr.x
+    b = u_dot2.curr.x / u_dot1.curr.x
+    
+    delta1 = alpha_curr + asin((a**2 - b**2) / 2 / a)
+    delta2 = alpha_curr + asin((1 + a**2 - b**2) / 2 / a)
+    return [delta1, delta2]
 
 
 def psi_desired(R_d, whl_cfg, dims, rho_prev):
+    psi = 0.0
     if (whl_cfg == 1):
-        x_c = dims.k4 * cos(radians(rho_prev)) + dims.k5 * sin(radians(rho_prev))
+        x_c = dims.k4 * cos(radians(rho_prev)) + \
+            dims.k5 * sin(radians(rho_prev))
         x_R = dims.k2 - 0.5 * dims.k6 * \
             (sin(dims.k9 - radians(rho_prev) - pi/2.0) +
              sin(dims.k9 - radians(radians(-rho_prev)) - pi/2.0))
+        psi = atan((x_c + x_R)/(R_d - dims.k3))
     elif (whl_cfg == 2):
-        x_c = dims.k4 * cos(radians(-rho_prev)) + dims.k5 * sin(radians(-rho_prev))
+        x_c = dims.k4 * cos(radians(-rho_prev)) + \
+            dims.k5 * sin(radians(-rho_prev))
         x_R = dims.k2 - 0.5 * dims.k6 * \
             (sin(dims.k9 - radians(-rho_prev) - pi/2.0) +
              sin(dims.k9 - radians(radians(rho_prev)) - pi/2.0))
-
-    return atan((x_c - x_R)/(R_d - dims.k3))
+        psi = atan((x_c + x_R)/(R_d + dims.k3))
+    return psi
 
 
 def upate_jacobian_12(whl_cfg, dims, q, wq):
@@ -243,7 +270,7 @@ def wheel12(V_d, w_d, whl_cfg, dims, q, q_dot, wq_dot, J):
     b = (-1) ** whl_cfg
     theta_dot_d = (V_d + b * dims.k1 * q_dot.prev.rho_dot -
                    J[0, 1] * q_dot.prev.psi_dot - J[0, 3] * wq_dot.prev.delta_dot) / J[0, 2]
-    
+
     if w_d == 0.0 or V_d == 0.0:
         return [theta_dot_d, 0.0]
 
@@ -259,7 +286,7 @@ def wheel3456(V_d, whl_cfg, dims, q, q_dot, wq, wq_dot, J):
         sigma = q.curr.rho + q.curr.beta1 + wq.curr.delta
     elif whl_cfg == 5 or whl_cfg == 6:
         sigma = -q.curr.rho + q.curr.beta2 + wq.curr.delta
-    
+
     b = (-1) ** whl_cfg
 
     theta_dot = (V_d + b * dims.k1 * q_dot.prev.rho_dot -
@@ -268,4 +295,3 @@ def wheel3456(V_d, whl_cfg, dims, q, q_dot, wq, wq_dot, J):
                  J[0, 4] * wq_dot.prev.delta_dot) / (dims.k10 * cos(sigma))
 
     return [theta_dot]
-

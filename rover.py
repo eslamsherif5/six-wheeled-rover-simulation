@@ -2,53 +2,68 @@
 
 from rover_defs import *
 
+
 def update_jacobians(dims, q, wq):
     ## wheels 1,2 ##
     J_1 = np.zeros([6, 4])
     J_2 = np.zeros([6, 4])
 
-    J_1 = upate_jacobian_12(1, dims, q, wq)    
+    J_1 = upate_jacobian_12(1, dims, q, wq)
     J_2 = upate_jacobian_12(2, dims, q, wq)
-    
+
     ## wheels 3, 4, 5, 6 ##
     J_3 = np.zeros([6, 5])
     J_4 = np.zeros([6, 5])
     J_5 = np.zeros([6, 5])
     J_6 = np.zeros([6, 5])
-    
+
     J_3 = upate_jacobian_3456(3, dims, q, wq)
     J_4 = upate_jacobian_3456(4, dims, q, wq)
     J_5 = upate_jacobian_3456(5, dims, q, wq)
     J_6 = upate_jacobian_3456(6, dims, q, wq)
-    
+
     return [J_1, J_2, J_3, J_4, J_5, J_6]
 
 
-def update_refs(V_d, w_d, dims, q, q_dot, wq, wq_dot, J):
-    whl1_ref = wheel12(V_d, w_d, 1, dims, q, q_dot, wq_dot, J[0])    # [theta_dot_d, psi_d]
-    whl2_ref = wheel12(V_d, w_d, 2, dims, q, q_dot, wq_dot, J[1])    # [theta_dot_d, psi_d]
-    whl3_ref = wheel3456(V_d, 3, dims, q, q_dot, wq, wq_dot, J[2])   # [theta_dot_d]
-    whl4_ref = wheel3456(V_d, 4, dims, q, q_dot, wq, wq_dot, J[3])   # [theta_dot_d]
-    whl5_ref = wheel3456(V_d, 5, dims, q, q_dot, wq, wq_dot, J[4])   # [theta_dot_d]
-    whl6_ref = wheel3456(V_d, 6, dims, q, q_dot, wq, wq_dot, J[5])   # [theta_dot_d]
+def update_setpoints(V_d, w_d, dims, q, q_dot, wq, wq_dot, J):
+    whl1_setpoints = wheel12(V_d, w_d, 1, dims, q, q_dot,
+                             wq_dot, J[0])    # [theta_dot_d, psi_d]
+    whl2_setpoints = wheel12(V_d, w_d, 2, dims, q, q_dot,
+                             wq_dot, J[1])    # [theta_dot_d, psi_d]
+    whl3_setpoints = wheel3456(
+        V_d, 3, dims, q, q_dot, wq, wq_dot, J[2])   # [theta_dot_d]
+    whl4_setpoints = wheel3456(
+        V_d, 4, dims, q, q_dot, wq, wq_dot, J[3])   # [theta_dot_d]
+    whl5_setpoints = wheel3456(
+        V_d, 5, dims, q, q_dot, wq, wq_dot, J[4])   # [theta_dot_d]
+    whl6_setpoints = wheel3456(
+        V_d, 6, dims, q, q_dot, wq, wq_dot, J[5])   # [theta_dot_d]
 
-    return [whl1_ref, whl2_ref, whl3_ref, whl4_ref, whl5_ref, whl6_ref]
+    return [whl1_setpoints, whl2_setpoints, whl3_setpoints, whl4_setpoints, whl5_setpoints, whl6_setpoints]
+
+
+def update_ground_contact_angles(dims, u_dot1, u_dot2, u_dot3, u_dot4, u_dot5, u_dot6, alpha_dot, alpha_curr, beta_curr, wq1, wq3, wq5):
+    delta1 = delta12(dims, u_dot1, alpha_dot, alpha_curr,
+                     beta_curr, wq1, wq3, wq5)
+    delta2 = delta12(dims, u_dot2, alpha_dot, alpha_curr,
+                     beta_curr, wq2, wq4, wq6)
+    delta35 = delta3456(dims, u_dot3, u_dot5, alpha_curr, wq3, wq5)
+    delta46 = delta3456(dims, u_dot4, u_dot6, alpha_curr, wq4, wq6)
+    return [delta1[0], delta2[0], delta35[0], delta35[1], delta46[0], delta46[1]]
 
 
 def update(V_d, w_d, dims, q, q_dot, wq, wq_dot, t, dt):
     # Read sensed angles (rho, beta1, beta2, alpha_dot, gamma1_dot, gamma2_dot)
     # Hardware ->
-    
-    
-    
+
     # Calculating jacobians for all wheels
     J = update_jacobians(dims, q, wq)
-    
+
     # Calculate reference points for wheels -> theta_dot_d (for all wheels), psi_d (for wheel 1,2)
     # Calculate unsensed angles (psi1, psi2, delta_i) -> this step is implicitly done inside the desired values calculation
-    whl_refs = update_refs(V_d, w_d, dims, q, q_dot, wq, wq_dot, J)
-    
-    
+    update_ground_contact_angles(dims, u_dot1, u_dot2, u_dot3, u_dot4, u_dot5, u_dot6, alpha_dot, alpha_curr, beta_curr, wq1, wq3, wq5)
+    whl_refs = update_setpoints(V_d, w_d, dims, q, q_dot, wq, wq_dot, J)
+
 
 V_d = 1.0  # m/s, for the whole vehicle
 w_d = 1.0  # rad/s, for the whole vehicle
@@ -251,7 +266,6 @@ u1_dot.curr = dotdict(u1_dot.curr)
 u1_dot.prev = dotdict(u1_dot.prev)
 
 
-
 # print(upate_jacobian_12(1, dims, q, wq1))
 
 t = np.linspace(0, 100, 1001)
@@ -268,6 +282,6 @@ delta = np.zeros_like(t)
 
 for i in range(t.shape[0]):
     delta[i] = degrees(0.1 * (cos(0.15*t[i]) + sin(0.15*t[i])))
-    
-pyplot.plot(t,delta)
+
+pyplot.plot(t, delta)
 pyplot.show()
