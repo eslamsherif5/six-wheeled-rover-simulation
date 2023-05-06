@@ -142,11 +142,8 @@ def delta3456(dims, u_dot1, u_dot2, alpha_dot, alpha_curr, wq1, wq2):
 def psi_desired(R_d, whl_cfg, dims, rho_prev):
     psi = 0.0
     if (whl_cfg == 1):
-        x_c = dims.k4 * cos(radians(rho_prev)) + \
-            dims.k5 * sin(radians(rho_prev))
-        x_R = dims.k2 - 0.5 * dims.k6 * \
-            (sin(dims.k9 - radians(rho_prev) - pi/2.0) +
-             sin(dims.k9 - radians(radians(-rho_prev)) - pi/2.0))
+        x_c = dims.k4 * cos(radians(rho_prev)) + dims.k5 * sin(radians(rho_prev))
+        x_R = dims.k2 - 0.5 * dims.k6 * (sin(dims.k9 - radians(rho_prev) - pi/2.0) + sin(dims.k9 - radians(radians(-rho_prev)) - pi/2.0))
         psi = atan((x_c + x_R)/(R_d - dims.k3))
     elif (whl_cfg == 2):
         x_c = dims.k4 * cos(radians(-rho_prev)) + \

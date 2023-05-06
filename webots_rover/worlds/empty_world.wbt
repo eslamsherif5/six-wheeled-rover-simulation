@@ -1,0 +1,607 @@
+#VRML_SIM R2023a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/BrushedAluminium.proto"
+
+WorldInfo {
+  lineScale 0.3
+}
+Viewpoint {
+  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  position -0.7991182367100508 0.322356193583744 0.4593504317541484
+}
+TexturedBackground {
+  skyColor [
+    0.333333 0.341176 0.32549
+  ]
+}
+TexturedBackgroundLight {
+  castShadows FALSE
+}
+RectangleArena {
+  rotation 0 1 0 0
+  floorSize 5 5
+  floorAppearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/textures/parquetry/light_strip_parquetry_base_color.jpg"
+      ]
+    }
+    roughness 1
+    metalness 0
+    normalMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/textures/parquetry/light_strip_parquetry_normal.jpg"
+      ]
+    }
+    emissiveIntensity 0
+  }
+  wallAppearance BrushedAluminium {
+    colorOverride 0.180392 0.203922 0.211765
+  }
+}
+Robot {
+  children [
+    DEF CAD Transform {
+      translation -0.16 0 0
+      scale 1000 1000 1000
+      children [
+        CadShape {
+          url [
+            "../meshes/rover.obj"
+          ]
+          castShadows FALSE
+          isPickable FALSE
+        }
+      ]
+    }
+    DEF R_FRAME Transform {
+      translation 0 0 0.63
+      children [
+        DEF D_FRAME Transform {
+          translation 0.0045 0 0.0915
+          children [
+            DEF LEFT_ROCKER_TF Transform {
+              translation 0 0.345 0
+              children [
+                DEF LEFT_ROCKER_JNT HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis 0 1 0
+                  }
+                  device [
+                    PositionSensor {
+                      name "left_rocker_angle_sensor"
+                    }
+                  ]
+                  endPoint DEF LEFT_ROCKER_SLD Solid {
+                    rotation 0 1 0 0
+                    children [
+                      DEF A1_FRAME Transform {
+                        translation 0.479123 0.027 -0.50898
+                        children [
+                          DEF WHL1_TF Transform {
+                            rotation 1 0 0 -1.5708003061004252
+                            children [
+                              DEF WHL1_JNT HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  axis 0 0 1
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "whl1_drive_motor"
+                                  }
+                                  PositionSensor {
+                                    name "whl1_enc"
+                                  }
+                                ]
+                                endPoint DEF WHL1_SLD Solid {
+                                  name "solid(1)"
+                                  boundingObject DEF WHL_BB_GRP Group {
+                                    children [
+                                      Transform {
+                                        children [
+                                          Cylinder {
+                                            height 0.154
+                                            radius 0.15
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                  physics DEF WHL_PHYS Physics {
+                                    density 250
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                      DEF B1_FRAME Transform {
+                        translation -0.4925 0.05 -0.0865
+                        children [
+                          DEF LEFT_BOGIE_JNT HingeJoint {
+                            jointParameters HingeJointParameters {
+                              axis 0 1 0
+                            }
+                            device [
+                              PositionSensor {
+                                name "left_bogie_angle_sensor"
+                              }
+                            ]
+                            endPoint DEF LEFT_BOGIE_SLD Solid {
+                              rotation 0 1 0 0
+                              children [
+                                DEF A3_FRAME Transform {
+                                  translation 0.35297 0.0275 -0.424235
+                                  rotation 0 1 0 0
+                                  children [
+                                    DEF WHL3_TF Transform {
+                                      rotation 1 0 0 -1.5707996938995747
+                                      children [
+                                        DEF WHL3_JNT HingeJoint {
+                                          jointParameters HingeJointParameters {
+                                            axis 0 0 1
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "whl3_drive_motor"
+                                            }
+                                            PositionSensor {
+                                              name "whl3_enc"
+                                            }
+                                          ]
+                                          endPoint DEF WHL3_SLD Solid {
+                                            name "solid(2)"
+                                            boundingObject USE WHL_BB_GRP
+                                            physics USE WHL_PHYS
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                                DEF A5_FRAME Transform {
+                                  translation -0.31453 0.0275 -0.424235
+                                  children [
+                                    DEF WHL5_TF Transform {
+                                      rotation 1 0 0 -1.5707996938995747
+                                      children [
+                                        DEF WHL5_JNT HingeJoint {
+                                          jointParameters HingeJointParameters {
+                                            axis 0 0 1
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "whl5_drive_motor"
+                                            }
+                                            PositionSensor {
+                                              name "whl5_enc"
+                                            }
+                                          ]
+                                          endPoint DEF WHL5_SLD Solid {
+                                            name "solid(1)"
+                                            boundingObject USE WHL_BB_GRP
+                                            physics USE WHL_PHYS
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                              boundingObject DEF BOGIE_BB_GRP Group {
+                                children [
+                                  Transform {
+                                    rotation 1 0 0 -1.5707996938995747
+                                    children [
+                                      Shape {
+                                        geometry Cylinder {
+                                          height 0.05
+                                          radius 0.04
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation -0.146 0 -0.0772
+                                    rotation 0 1 0 -0.485
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.26 0.05 0.026
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation 0.147 0 -0.0775
+                                    rotation 0 1 0 0.485
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.26 0.05 0.026
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation -0.334 0 -0.141
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.17 0.057 0.21
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation 0.334 0 -0.141
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.17 0.057 0.21
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation 0.353 -0.095 -0.3535
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.06 0.091 0.27
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation -0.3145 -0.095 -0.3535
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.06 0.091 0.27
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                              physics DEF BOGIE_PHYS Physics {
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                    boundingObject Group {
+                      children [
+                        Transform {
+                          rotation 1 0 0 -1.5707996938995747
+                          children [
+                            Shape {
+                              geometry Cylinder {
+                                height 0.06
+                                radius 0.048
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation -0.252651 0 -0.0447411
+                          rotation 0 1 0 -0.175
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.5 0.05 0.03
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation 0.22 0 -0.127
+                          rotation 0 1 0 0.525
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.42 0.05 0.027
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation 0.46 0 -0.226
+                          rotation 0 1 0 0
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.17 0.057 0.21
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation -0.4925 0 -0.0865
+                          rotation 1 0 0 -1.5707996938995747
+                          children [
+                            Shape {
+                              geometry Cylinder {
+                                height 0.05
+                                radius 0.04
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation 0.4789 -0.095 -0.44
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.06 0.091 0.27
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                    physics DEF ROCKER_PHYS Physics {
+                    }
+                  }
+                }
+              ]
+            }
+            DEF RIGHT_ROCKER_TF Transform {
+              translation 0 -0.345 0
+              rotation 0 1 0 0
+              children [
+                DEF RIGHT_ROCKER_JNT HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis 0 1 0
+                  }
+                  device [
+                    PositionSensor {
+                      name "right_rocker_angle_sensor"
+                    }
+                  ]
+                  endPoint DEF RIGHT_ROCKER_SLD Solid {
+                    rotation 0 1 0 0
+                    children [
+                      DEF A2_FRAME Transform {
+                        translation 0.479123 -0.027 -0.50898
+                        children [
+                          DEF WHL2_TF Transform {
+                            rotation 1 0 0 -1.5707996938995747
+                            children [
+                              DEF WHL2_JNT HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  axis 0 0 1
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "whl2_drive_motor"
+                                  }
+                                  PositionSensor {
+                                    name "whl2_enc"
+                                  }
+                                ]
+                                endPoint DEF WHL2_SLD Solid {
+                                  name "solid(1)"
+                                  boundingObject USE WHL_BB_GRP
+                                  physics USE WHL_PHYS
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                      DEF B2_FRAME Transform {
+                        translation -0.4925 -0.05 -0.0865
+                        children [
+                          DEF RIGHT_BOGIE_JNT HingeJoint {
+                            jointParameters HingeJointParameters {
+                              axis 0 1 0
+                            }
+                            device [
+                              PositionSensor {
+                                name "right_bogie_angle_sensor"
+                              }
+                            ]
+                            endPoint DEF RIGHT_BOGIE_SLD Solid {
+                              rotation 0 1 0 0
+                              children [
+                                DEF A4_FRAME Transform {
+                                  translation 0.35297 -0.0275 -0.424235
+                                  rotation 1 0 0 -1.5707996938995747
+                                  children [
+                                    DEF WHL4_TF Transform {
+                                      children [
+                                        DEF WHL4_JNT HingeJoint {
+                                          jointParameters HingeJointParameters {
+                                            axis 0 0 1
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "whl4_drive_motor"
+                                            }
+                                            PositionSensor {
+                                              name "whl4_enc"
+                                            }
+                                          ]
+                                          endPoint DEF WHL4_SLD Solid {
+                                            boundingObject USE WHL_BB_GRP
+                                            physics USE WHL_PHYS
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                                DEF A6_FRAME Transform {
+                                  translation -0.31453 -0.0275 -0.424235
+                                  rotation 1 0 0 -1.5707996938995747
+                                  children [
+                                    DEF WHL6_TF Transform {
+                                      children [
+                                        DEF WHL6_JNT HingeJoint {
+                                          jointParameters HingeJointParameters {
+                                            axis 0 0 1
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "whl4_drive_motor"
+                                            }
+                                            PositionSensor {
+                                              name "whl4_enc"
+                                            }
+                                          ]
+                                          endPoint DEF WHL6_JNT Solid {
+                                            name "solid(1)"
+                                            boundingObject USE WHL_BB_GRP
+                                            physics USE WHL_PHYS
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                              boundingObject USE BOGIE_BB_GRP
+                              physics USE BOGIE_PHYS
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                    name "solid(1)"
+                    boundingObject Group {
+                      children [
+                        Transform {
+                          rotation 1 0 0 -1.5707996938995747
+                          children [
+                            Shape {
+                              geometry Cylinder {
+                                height 0.06
+                                radius 0.048
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation -0.252651 0 -0.0447411
+                          rotation 0 1 0 -0.175
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.5 0.05 0.03
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation 0.22 0 -0.127
+                          rotation 0 1 0 0.525
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.42 0.05 0.027
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation 0.46 0 -0.226
+                          rotation 0 1 0 0
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.17 0.057 0.21
+                              }
+                            }
+                          ]
+                        }
+                        Transform {
+                          translation -0.4925 0 -0.0865
+                          rotation 1 0 0 -1.5707996938995747
+                          children [
+                            Shape {
+                              geometry Cylinder {
+                                height 0.05
+                                radius 0.04
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                    physics USE ROCKER_PHYS
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  boundingObject DEF BODY_BB Group {
+    children [
+      Transform {
+        translation 0 0 0.63
+        children [
+          DEF BODY_SHP Shape {
+            geometry Box {
+              size 1 0.6 0.32
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 0.4835 0.25 0.2815
+        children [
+          DEF DRIVE_MOTOR_SHP Shape {
+            geometry Box {
+              size 0.06 0.091 0.27
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 0.4835 -0.25 0.2815
+        children [
+          USE DRIVE_MOTOR_SHP
+        ]
+      }
+      Transform {
+        translation -0.135 -0.3 0.2815
+        children [
+          USE DRIVE_MOTOR_SHP
+        ]
+      }
+      Transform {
+        translation -0.135 0.3 0.2815
+        children [
+          USE DRIVE_MOTOR_SHP
+        ]
+      }
+      Transform {
+        translation -0.8025 -0.3 0.2815
+        children [
+          USE DRIVE_MOTOR_SHP
+        ]
+      }
+      Transform {
+        translation -0.8025 0.3 0.2815
+        children [
+          USE DRIVE_MOTOR_SHP
+        ]
+      }
+    ]
+  }
+  physics Physics {
+    centerOfMass [
+      0 0 0.475
+    ]
+  }
+}
