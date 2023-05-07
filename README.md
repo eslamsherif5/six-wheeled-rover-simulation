@@ -3,7 +3,7 @@
 ## Pending Tasks
 - [ ] Finish importing CAD in Webots
 - [ ] Write interfaces for sensors and actuators in simulation
-- [ ] Calculate wheel rolling velocities based on skid steering
+- [x] Calculate wheel rolling velocities based on skid steering
 - [ ] Implement and verify velocity equations with graphs
 - [ ] Feed calculated velocities to simulation
 - [ ] Design control loops for velocity control for each motor
