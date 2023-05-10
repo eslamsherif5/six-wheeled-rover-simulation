@@ -1,7 +1,8 @@
 # Kinematic Modeling and Control of a Six-Wheel Planetary Rover with Front Steering
 
 ## Pending Tasks
-- [ ] Finish importing CAD in Webots
+- [x] Finish importing CAD in Webots
+- [ ] Add real robot dimensions in the controller code
 - [ ] Write interfaces for sensors and actuators in simulation
 - [x] Calculate wheel rolling velocities based on skid steering
 - [x] Implement and verify velocity equations with graphs
