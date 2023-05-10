@@ -9,8 +9,8 @@ WorldInfo {
   lineScale 0.3
 }
 Viewpoint {
-  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
-  position -0.7991182367100508 0.322356193583744 0.4593504317541484
+  orientation 0.32248011068278326 -0.14273764290123622 -0.9357523943399874 3.926945585591129
+  position 3.8577249282104704 -3.1950414872463617 4.379999478314324
 }
 TexturedBackground {
   skyColor [
@@ -44,22 +44,37 @@ RectangleArena {
 }
 Robot {
   children [
-    DEF CAD Transform {
-      translation -0.16 0 0
-      scale 1000 1000 1000
-      children [
-        CadShape {
-          url [
-            "../meshes/rover.obj"
-          ]
-          castShadows FALSE
-          isPickable FALSE
-        }
-      ]
-    }
     DEF R_FRAME Transform {
       translation 0 0 0.63
       children [
+        DEF TOP_DIFF_LINK_TF Transform {
+          translation -0.0955 0 0.2115
+          children [
+            DEF TOP_DIFF_JNT HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0 0 1
+              }
+              endPoint DEF TOP_DIFF_SLD Solid {
+                name "top_diff_link"
+                boundingObject Group {
+                  children [
+                    Transform {
+                      children [
+                        Shape {
+                          geometry Box {
+                            size 0.05 0.73 0.05
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+                physics DEF DIFF_LINK_PHYS Physics {
+                }
+              }
+            }
+          ]
+        }
         DEF D_FRAME Transform {
           translation 0.0045 0 0.0915
           children [
@@ -78,6 +93,71 @@ Robot {
                   endPoint DEF LEFT_ROCKER_SLD Solid {
                     rotation 0 1 0 0
                     children [
+                      Transform {
+                        children [
+                          CadShape {
+                            url [
+                              "../meshes/rocker1.dae"
+                            ]
+                          }
+                        ]
+                      }
+                      DEF LEFT_DIFF_LINK_TF Transform {
+                        children [
+                          Solid {
+                            children [
+                              Transform {
+                                translation 0 0 0.11
+                                children [
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0 1 0
+                                      anchor 0 0 0.01
+                                    }
+                                    endPoint Solid {
+                                      translation 0.02 0 0.01
+                                      rotation 0 1 0 -1.5708
+                                      children [
+                                        Transform {
+                                          translation 0 0 0.12
+                                          children [
+                                            HingeJoint {
+                                              jointParameters HingeJointParameters {
+                                              }
+                                              endPoint SolidReference {
+                                                solidName "top_diff_link"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                      boundingObject DEF DIFF_LINK_BB Group {
+                                        children [
+                                          Transform {
+                                            translation 0 0 0.07
+                                            children [
+                                              Shape {
+                                                geometry Box {
+                                                  size 0.05 0.04 0.15
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                      physics DEF DIFF_LINK_PHYS Physics {
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                            name "left_diff_link"
+                            boundingObject USE DIFF_LINK_BB
+                            physics USE DIFF_LINK_PHYS
+                          }
+                        ]
+                      }
                       DEF A1_FRAME Transform {
                         translation 0.479123 0.027 -0.50898
                         children [
@@ -97,6 +177,18 @@ Robot {
                                   }
                                 ]
                                 endPoint DEF WHL1_SLD Solid {
+                                  children [
+                                    DEF LEFT_WHL_CAD Transform {
+                                      rotation 0 1 0 -1.5707996938995747
+                                      children [
+                                        CadShape {
+                                          url [
+                                            "../meshes/wheel.dae"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
                                   name "solid(1)"
                                   boundingObject DEF WHL_BB_GRP Group {
                                     children [
@@ -111,7 +203,8 @@ Robot {
                                     ]
                                   }
                                   physics DEF WHL_PHYS Physics {
-                                    density 250
+                                    density -1
+                                    mass 15
                                   }
                                 }
                               }
@@ -134,6 +227,15 @@ Robot {
                             endPoint DEF LEFT_BOGIE_SLD Solid {
                               rotation 0 1 0 0
                               children [
+                                Transform {
+                                  children [
+                                    CadShape {
+                                      url [
+                                        "../meshes/bogie1.dae"
+                                      ]
+                                    }
+                                  ]
+                                }
                                 DEF A3_FRAME Transform {
                                   translation 0.35297 0.0275 -0.424235
                                   rotation 0 1 0 0
@@ -154,6 +256,9 @@ Robot {
                                             }
                                           ]
                                           endPoint DEF WHL3_SLD Solid {
+                                            children [
+                                              USE LEFT_WHL_CAD
+                                            ]
                                             name "solid(2)"
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
@@ -182,6 +287,9 @@ Robot {
                                             }
                                           ]
                                           endPoint DEF WHL5_SLD Solid {
+                                            children [
+                                              USE LEFT_WHL_CAD
+                                            ]
                                             name "solid(1)"
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
@@ -368,6 +476,56 @@ Robot {
                   endPoint DEF RIGHT_ROCKER_SLD Solid {
                     rotation 0 1 0 0
                     children [
+                      Transform {
+                        children [
+                          CadShape {
+                            url [
+                              "../meshes/rocker2.dae"
+                            ]
+                          }
+                        ]
+                      }
+                      DEF RIGHT_DIFF_LINK_TF Transform {
+                        children [
+                          Solid {
+                            children [
+                              Transform {
+                                translation 0.02 0 0.12
+                                rotation 0 1 0 -1.5707996938995747
+                                children [
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0 1 0
+                                      anchor 0 0 0.02
+                                    }
+                                    endPoint Solid {
+                                      children [
+                                        Transform {
+                                          translation 0 0 0.12
+                                          children [
+                                            HingeJoint {
+                                              jointParameters HingeJointParameters {
+                                              }
+                                              endPoint SolidReference {
+                                                solidName "top_diff_link"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                      boundingObject USE DIFF_LINK_BB
+                                      physics USE DIFF_LINK_PHYS
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                            name "right_diff_link"
+                            boundingObject USE DIFF_LINK_BB
+                            physics USE DIFF_LINK_PHYS
+                          }
+                        ]
+                      }
                       DEF A2_FRAME Transform {
                         translation 0.479123 -0.027 -0.50898
                         children [
@@ -387,6 +545,18 @@ Robot {
                                   }
                                 ]
                                 endPoint DEF WHL2_SLD Solid {
+                                  children [
+                                    DEF RIGHT_WHL_CAD Transform {
+                                      rotation 0 1 0 1.5707996938995747
+                                      children [
+                                        CadShape {
+                                          url [
+                                            "../meshes/wheel.dae"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
                                   name "solid(1)"
                                   boundingObject USE WHL_BB_GRP
                                   physics USE WHL_PHYS
@@ -411,6 +581,15 @@ Robot {
                             endPoint DEF RIGHT_BOGIE_SLD Solid {
                               rotation 0 1 0 0
                               children [
+                                Transform {
+                                  children [
+                                    CadShape {
+                                      url [
+                                        "../meshes/bogie2.dae"
+                                      ]
+                                    }
+                                  ]
+                                }
                                 DEF A4_FRAME Transform {
                                   translation 0.35297 -0.0275 -0.424235
                                   rotation 1 0 0 -1.5707996938995747
@@ -430,6 +609,9 @@ Robot {
                                             }
                                           ]
                                           endPoint DEF WHL4_SLD Solid {
+                                            children [
+                                              USE RIGHT_WHL_CAD
+                                            ]
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
                                           }
@@ -457,6 +639,9 @@ Robot {
                                             }
                                           ]
                                           endPoint DEF WHL6_JNT Solid {
+                                            children [
+                                              USE RIGHT_WHL_CAD
+                                            ]
                                             name "solid(1)"
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
@@ -542,6 +727,16 @@ Robot {
             }
           ]
         }
+        DEF BODY_CAD_TF Transform {
+          translation 0 0 -0.175
+          children [
+            CadShape {
+              url [
+                "../meshes/body.dae"
+              ]
+            }
+          ]
+        }
       ]
     }
   ]
@@ -604,4 +799,5 @@ Robot {
       0 0 0.475
     ]
   }
+  controller "<none>"
 }
