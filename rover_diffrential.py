@@ -1,6 +1,8 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 
+import matplotlib.pyplot as mp
 
-class Diffrential:
+
+class DiffrentialRover:
     def __init__(self,v,omega,k3,k3bar):
         self.v = v 
         self.omega = omega
@@ -32,7 +34,10 @@ class Diffrential:
 
         return [v1,v2,v3,v4,v5,v6]
         
-v = Diffrential (2,2,0.2,0.05)
+v = DiffrentialRover (2,2,0.2,0.05)
 vel = v.velocities()
 for i in range(len(vel)):
     print('Rover Velcotiy v'+str(i)+ ': ' + str(vel[i]))
+
+# mp.plot(vel)
+# mp.show()
