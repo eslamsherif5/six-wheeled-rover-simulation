@@ -11,8 +11,8 @@ float currentVelocity {0};
 float errorVelocity  {0};
 float plantInput {0}; 
 
-
 float PIDController (float errorVelocity , float errorI , float errorD, float kp , float ki, float kd) ; 
+
 void setup()
 {
     Serial.begin(9600);
@@ -24,18 +24,14 @@ void loop()
     deltaT = (static_cast<float>(currentT - previousT))/1.0e6 ; 
     errorVelocity = targetVelocity - currentVelocity ;  
     errorI = errorI +  errorVelocity * deltaT ; 
-    errorD =  (errorD - errorVelocity) / deltaT ; 
-
+    errorD =  (targetVelocity - currentVelocity) / deltaT ; 
     plantInput = PIDController (errorVelocity,errorI,errorD,kp,ki,kd) ; 
-
-    previousT = currentT ; 
-  
+    previousT = currentT ;   
 }
 
 float PIDController (float errorVelocity , float errorI , float errorD, float kp , float ki, float kd)
 {
     plantInput = kp * errorVelocity + ki * errorI + kd * errorD ;
-
     return plantInput ; 
 
 }
