@@ -6,11 +6,23 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/BrushedAluminium.proto"
 
 WorldInfo {
+  CFM 0.0001
+  ERP 0.18
+  basicTimeStep 8
   lineScale 0.3
+  contactProperties [
+    ContactProperties {
+      material1 "ground"
+      material2 "rubber"
+      coulombFriction [
+        100
+      ]
+    }
+  ]
 }
 Viewpoint {
-  orientation 0.32248011068278326 -0.14273764290123622 -0.9357523943399874 3.926945585591129
-  position 3.8577249282104704 -3.1950414872463617 4.379999478314324
+  orientation -0.30412387446513883 -0.19691294628473557 0.9320589898529906 4.227559448963585
+  position 0.9738398592647194 2.8150417060747044 2.787297541020749
 }
 TexturedBackground {
   skyColor [
@@ -22,7 +34,8 @@ TexturedBackgroundLight {
 }
 RectangleArena {
   rotation 0 1 0 0
-  floorSize 5 5
+  contactMaterial "ground"
+  floorSize 50 50
   floorAppearance PBRAppearance {
     baseColorMap ImageTexture {
       url [
@@ -116,7 +129,7 @@ Robot {
                                     }
                                     endPoint Solid {
                                       translation 0.02 0 0.01
-                                      rotation 0 1 0 -1.5708
+                                      rotation 0 -1 0 1.5708
                                       children [
                                         Transform {
                                           translation 0 0 0.12
@@ -171,6 +184,8 @@ Robot {
                                 device [
                                   RotationalMotor {
                                     name "whl1_drive_motor"
+                                    maxVelocity 50
+                                    maxTorque 100
                                   }
                                   PositionSensor {
                                     name "whl1_enc"
@@ -190,6 +205,7 @@ Robot {
                                     }
                                   ]
                                   name "solid(1)"
+                                  contactMaterial "rubber"
                                   boundingObject DEF WHL_BB_GRP Group {
                                     children [
                                       Transform {
@@ -204,7 +220,7 @@ Robot {
                                   }
                                   physics DEF WHL_PHYS Physics {
                                     density -1
-                                    mass 15
+                                    mass 20
                                   }
                                 }
                               }
@@ -218,6 +234,9 @@ Robot {
                           DEF LEFT_BOGIE_JNT HingeJoint {
                             jointParameters HingeJointParameters {
                               axis 0 1 0
+                              springConstant 0.0001
+                              dampingConstant 0.0001
+                              staticFriction 0.0001
                             }
                             device [
                               PositionSensor {
@@ -250,6 +269,8 @@ Robot {
                                           device [
                                             RotationalMotor {
                                               name "whl3_drive_motor"
+                                              maxVelocity 50
+                                              maxTorque 100
                                             }
                                             PositionSensor {
                                               name "whl3_enc"
@@ -260,6 +281,7 @@ Robot {
                                               USE LEFT_WHL_CAD
                                             ]
                                             name "solid(2)"
+                                            contactMaterial "rubber"
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
                                           }
@@ -281,6 +303,8 @@ Robot {
                                           device [
                                             RotationalMotor {
                                               name "whl5_drive_motor"
+                                              maxVelocity 50
+                                              maxTorque 100
                                             }
                                             PositionSensor {
                                               name "whl5_enc"
@@ -291,6 +315,7 @@ Robot {
                                               USE LEFT_WHL_CAD
                                             ]
                                             name "solid(1)"
+                                            contactMaterial "rubber"
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
                                           }
@@ -378,6 +403,7 @@ Robot {
                                 ]
                               }
                               physics DEF BOGIE_PHYS Physics {
+                                density 35000
                               }
                             }
                           }
@@ -455,6 +481,7 @@ Robot {
                       ]
                     }
                     physics DEF ROCKER_PHYS Physics {
+                      density 3500
                     }
                   }
                 }
@@ -499,6 +526,7 @@ Robot {
                                       anchor 0 0 0.02
                                     }
                                     endPoint Solid {
+                                      rotation 0 1 0 0
                                       children [
                                         Transform {
                                           translation 0 0 0.12
@@ -539,6 +567,8 @@ Robot {
                                 device [
                                   RotationalMotor {
                                     name "whl2_drive_motor"
+                                    maxVelocity 50
+                                    maxTorque 100
                                   }
                                   PositionSensor {
                                     name "whl2_enc"
@@ -558,6 +588,7 @@ Robot {
                                     }
                                   ]
                                   name "solid(1)"
+                                  contactMaterial "rubber"
                                   boundingObject USE WHL_BB_GRP
                                   physics USE WHL_PHYS
                                 }
@@ -572,6 +603,9 @@ Robot {
                           DEF RIGHT_BOGIE_JNT HingeJoint {
                             jointParameters HingeJointParameters {
                               axis 0 1 0
+                              springConstant 0.0001
+                              dampingConstant 0.0001
+                              staticFriction 0.0001
                             }
                             device [
                               PositionSensor {
@@ -603,6 +637,8 @@ Robot {
                                           device [
                                             RotationalMotor {
                                               name "whl4_drive_motor"
+                                              maxVelocity 50
+                                              maxTorque 100
                                             }
                                             PositionSensor {
                                               name "whl4_enc"
@@ -612,6 +648,7 @@ Robot {
                                             children [
                                               USE RIGHT_WHL_CAD
                                             ]
+                                            contactMaterial "rubber"
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
                                           }
@@ -632,10 +669,12 @@ Robot {
                                           }
                                           device [
                                             RotationalMotor {
-                                              name "whl4_drive_motor"
+                                              name "whl6_drive_motor"
+                                              maxVelocity 50
+                                              maxTorque 100
                                             }
                                             PositionSensor {
-                                              name "whl4_enc"
+                                              name "whl6_enc"
                                             }
                                           ]
                                           endPoint DEF WHL6_JNT Solid {
@@ -643,6 +682,7 @@ Robot {
                                               USE RIGHT_WHL_CAD
                                             ]
                                             name "solid(1)"
+                                            contactMaterial "rubber"
                                             boundingObject USE WHL_BB_GRP
                                             physics USE WHL_PHYS
                                           }
@@ -652,7 +692,83 @@ Robot {
                                   ]
                                 }
                               ]
-                              boundingObject USE BOGIE_BB_GRP
+                              boundingObject DEF BOGIE_BB_GRP Group {
+                                children [
+                                  Transform {
+                                    rotation 1 0 0 -1.5707996938995747
+                                    children [
+                                      Shape {
+                                        geometry Cylinder {
+                                          height 0.05
+                                          radius 0.04
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation -0.146 0 -0.0772
+                                    rotation 0 1 0 -0.485
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.26 0.05 0.026
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation 0.147 0 -0.0775
+                                    rotation 0 1 0 0.485
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.26 0.05 0.026
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation -0.334 0 -0.141
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.17 0.057 0.21
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation 0.334 0 -0.141
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.17 0.057 0.21
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation 0.353 0.095 -0.3535
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.06 0.091 0.27
+                                        }
+                                      }
+                                    ]
+                                  }
+                                  Transform {
+                                    translation -0.3145 0.095 -0.3535
+                                    children [
+                                      Shape {
+                                        geometry Box {
+                                          size 0.06 0.091 0.27
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
                               physics USE BOGIE_PHYS
                             }
                           }
@@ -718,6 +834,16 @@ Robot {
                             }
                           ]
                         }
+                        Transform {
+                          translation 0.4789 0.095 -0.44
+                          children [
+                            Shape {
+                              geometry Box {
+                                size 0.06 0.091 0.27
+                              }
+                            }
+                          ]
+                        }
                       ]
                     }
                     physics USE ROCKER_PHYS
@@ -752,46 +878,6 @@ Robot {
           }
         ]
       }
-      Transform {
-        translation 0.4835 0.25 0.2815
-        children [
-          DEF DRIVE_MOTOR_SHP Shape {
-            geometry Box {
-              size 0.06 0.091 0.27
-            }
-          }
-        ]
-      }
-      Transform {
-        translation 0.4835 -0.25 0.2815
-        children [
-          USE DRIVE_MOTOR_SHP
-        ]
-      }
-      Transform {
-        translation -0.135 -0.3 0.2815
-        children [
-          USE DRIVE_MOTOR_SHP
-        ]
-      }
-      Transform {
-        translation -0.135 0.3 0.2815
-        children [
-          USE DRIVE_MOTOR_SHP
-        ]
-      }
-      Transform {
-        translation -0.8025 -0.3 0.2815
-        children [
-          USE DRIVE_MOTOR_SHP
-        ]
-      }
-      Transform {
-        translation -0.8025 0.3 0.2815
-        children [
-          USE DRIVE_MOTOR_SHP
-        ]
-      }
     ]
   }
   physics Physics {
@@ -799,5 +885,5 @@ Robot {
       0 0 0.475
     ]
   }
-  controller "<none>"
+  controller "<extern>"
 }
