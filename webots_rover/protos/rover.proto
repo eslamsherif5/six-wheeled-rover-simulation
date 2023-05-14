@@ -146,6 +146,7 @@ PROTO rover [
                                     device [
                                     RotationalMotor {
                                         name "whl1_drive_motor"
+                                        maxTorque 100
                                     }
                                     PositionSensor {
                                         name "whl1_enc"
@@ -225,6 +226,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl3_drive_motor"
+                                                maxTorque 100
                                                 }
                                                 PositionSensor {
                                                 name "whl3_enc"
@@ -256,6 +258,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl5_drive_motor"
+                                                maxTorque 100
                                                 }
                                                 PositionSensor {
                                                 name "whl5_enc"
@@ -514,6 +517,7 @@ PROTO rover [
                                     device [
                                     RotationalMotor {
                                         name "whl2_drive_motor"
+                                        maxTorque 100
                                     }
                                     PositionSensor {
                                         name "whl2_enc"
@@ -578,6 +582,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl4_drive_motor"
+                                                maxTorque 100
                                                 }
                                                 PositionSensor {
                                                 name "whl4_enc"
@@ -608,6 +613,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl6_drive_motor"
+                                                maxTorque 100
                                                 }
                                                 PositionSensor {
                                                 name "whl6_enc"
@@ -731,46 +737,6 @@ PROTO rover [
                 size 1 0.6 0.32
                 }
             }
-            ]
-        }
-        Transform {
-            translation 0.4835 0.25 0.2815
-            children [
-            DEF DRIVE_MOTOR_SHP Shape {
-                geometry Box {
-                size 0.06 0.091 0.27
-                }
-            }
-            ]
-        }
-        Transform {
-            translation 0.4835 -0.25 0.2815
-            children [
-            USE DRIVE_MOTOR_SHP
-            ]
-        }
-        Transform {
-            translation -0.135 -0.3 0.2815
-            children [
-            USE DRIVE_MOTOR_SHP
-            ]
-        }
-        Transform {
-            translation -0.135 0.3 0.2815
-            children [
-            USE DRIVE_MOTOR_SHP
-            ]
-        }
-        Transform {
-            translation -0.8025 -0.3 0.2815
-            children [
-            USE DRIVE_MOTOR_SHP
-            ]
-        }
-        Transform {
-            translation -0.8025 0.3 0.2815
-            children [
-            USE DRIVE_MOTOR_SHP
             ]
         }
         ]
