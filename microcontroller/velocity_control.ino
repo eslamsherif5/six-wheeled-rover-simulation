@@ -16,28 +16,32 @@
 */
 
 #define speedometer 2  
-#define speedometerFreq 100000  
-#define maxSpeed 10  
-#define wheelRadius 0.145  
+#define speedometerFreq 100000 //     [Hz]    
 
-unsigned long previousT  {0}; 
+#define maxSpeed 10 //                [m/s]  
+#define wheelRadius 0.145 //          [m]
+
+unsigned long previousT  {0};//        
 unsigned long currentT {0}; 
 
-float deltaT {0.0};
+float deltaT {0.0};//            delta T[s] = Current Time - pervious Time 
 float deltaTmints {0.0};
+
 float kp {1.0} ;
 float ki {1.0} ; 
 float errorI {0.0};
 float kd {1.0} ; 
 float errorD {0.0}; 
-float targetVelocity {0.0}; 
-float currentVelocity {0.0}; 
-float errorVelocity  {0.0};
-float plantInput {0.0}; 
-float angularVelocityMeasured {0.0};
 
-int revolutions {0} ; 
-int rpm {0}; 
+float targetVelocity {0.0};//         [m/s] 
+float currentVelocity {0.0};//        [m/s]
+float errorVelocity  {0.0};//         [m/s]
+
+float plantInput {0.0}; 
+float angularVelocityMeasured {0.0};//[rad/sec]
+
+int revolutions {0};//                
+int rpm {0};//                        [rpm]
 int pulsOnTime {0};
 int noOfPulses {0}; 
 
