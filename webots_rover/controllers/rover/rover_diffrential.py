@@ -2,8 +2,8 @@
 import matplotlib.pyplot as mp
 from math import *
 import numpy as np
-from tictoc import tic, toc
-
+# from tictoc import tic, toc
+import time
 
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
@@ -54,7 +54,7 @@ class DiffrentialRover:
 
     def calc_rotation_radii(self):
         # ICR redius calcuation
-        self.rot_radii.r = self.input.omega / self.input.V
+        self.rot_radii.r = self.input.V / self.input.omega
         # rotation_radii for the left side of the rover
         self.rot_radii.r1 = self.rot_radii.r - self.dims.k3
         self.rot_radii.r35 = self.rot_radii.r - self.dims.k3 - self.dims.k3bar
@@ -63,34 +63,40 @@ class DiffrentialRover:
         self.rot_radii.r46 = self.rot_radii.r + self.dims.k3 + self.dims.k3bar
 
     def whl_rolling_vel(self):
-        if self.input.V == 0: 
-            print("V is set to 0.")
-            return []
+        if self.input.omega == 0.0 and self.input.V != 0.0: 
+            print("Omega is set to 0. Moving in a straight line.")
+            time.sleep(0.1)
+            theta_dot = list()
+            for i in range(6):
+                theta_dot.append(self.input.V / self.dims.k10)
+
+            return theta_dot
+
+        if self.input.V == 0.0 and self.input.omega == 0.0:
+            print("V and omega are set to 0.")
+            time.sleep(0.1)
+            return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         
         self.calc_rotation_radii()
         # Velcoity calcuation for the rover
-        theta_dot1 = (self.rot_radii.r1 * self.input.omega) / self.dims.k10
-        theta_dot2 = (self.rot_radii.r2 * self.input.omega) / self.dims.k10
-        theta_dot3 = (self.rot_radii.r35 * self.input.omega) / self.dims.k10
-        theta_dot4 = (self.rot_radii.r46 * self.input.omega) / self.dims.k10
-        theta_dot5 = (self.rot_radii.r35 * self.input.omega) / self.dims.k10
-        theta_dot6 = (self.rot_radii.r46 * self.input.omega) / self.dims.k10
+        theta_dot = list()
+        theta_dot.append((self.rot_radii.r1 * self.input.omega) / self.dims.k10)
+        theta_dot.append((self.rot_radii.r2 * self.input.omega) / self.dims.k10)
+        theta_dot.append((self.rot_radii.r35 * self.input.omega) / self.dims.k10)
+        theta_dot.append((self.rot_radii.r46 * self.input.omega) / self.dims.k10)
+        theta_dot.append((self.rot_radii.r35 * self.input.omega) / self.dims.k10)
+        theta_dot.append((self.rot_radii.r46 * self.input.omega) / self.dims.k10)
 
-        return [theta_dot1,
-                theta_dot2,
-                theta_dot3,
-                theta_dot4,
-                theta_dot5,
-                theta_dot6]
-
+        return theta_dot
 
 rover = DiffrentialRover()
-rover.input.V = 4.0
-rover.input.omega = 2.0
+rover.input.V = 0.0
+rover.input.omega = 0.0
 theta_dot = rover.whl_rolling_vel()
 
 if len(theta_dot) != 6:
-    print("Wheels rolling velocities cannot be calculated.")
+    print("Wheels rolling velocities were not calculated.")
+    time.sleep(0.1)
     exit(1)
 
 for i in range(len(theta_dot)):

@@ -2,14 +2,16 @@
 
 ## Pending Tasks
 - [x] Finish importing CAD in Webots
-- [ ] Add real robot dimensions in the controller code
-- [ ] Write interfaces for sensors and actuators in simulation
+- [x] Add real robot dimensions in the controller code
+- [x] Write interfaces for actuators in simulation
 - [x] Calculate wheel rolling velocities based on skid steering
+- [x] Implement a controller using keyboard for open loop testing in simulator
 - [x] Implement and verify velocity equations with graphs
-- [ ] Feed calculated velocities to simulation
+- [x] Feed calculated velocities to simulation
 - [ ] Design control loops for velocity control for each motor
 - [ ] Verify controllers on physical hardware
 
 ## Documentation
-- [ ] Documentation: Kinematics equations (velocities, wheel centers, reference point pose wrt joint angles (will be used later), ...)
-- [ ] Documentation: Diagrams
+- [x] Documentation: Kinematics equations (velocities, wheel centers, reference point pose wrt joint angles (will be used later), ...)
+- [x] Documentation: Control loops diagrams
+- [ ] Simulation and physical robot overview
