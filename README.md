@@ -8,7 +8,7 @@
 - [x] Implement a controller using keyboard for open loop testing in simulator
 - [x] Implement and verify velocity equations with graphs
 - [x] Feed calculated velocities to simulation
-- [ ] Design control loops for velocity control for each motor
+- [x] Design control loops for velocity control for each motor
 - [ ] Verify controllers on physical hardware
 
 ## Documentation
