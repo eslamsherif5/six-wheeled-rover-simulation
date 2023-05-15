@@ -7,7 +7,7 @@
 - [x] Calculate wheel rolling velocities based on skid steering
 - [x] Implement and verify velocity equations with graphs
 - [ ] Feed calculated velocities to simulation
-- [ ] Design control loops for velocity control for each motor
+- [x] Design control loops for velocity control for each motor
 - [ ] Verify controllers on physical hardware
 
 ## Documentation
