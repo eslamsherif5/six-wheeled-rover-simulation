@@ -37,7 +37,8 @@ w = 0.0
 rover.input.V = V       # [m/s]
 rover.input.omega = w   # [rad/s]
 theta_dot = rover.whl_rolling_vel() # [rad/s] 
-
+for i in range(len(motors)):
+            motors[i].setVelocity(theta_dot[i])
 # Main loop:
 # - perform simulation steps until Webots is stopping the controller
 while robot.step(timestep) != -1:
@@ -113,7 +114,7 @@ while robot.step(timestep) != -1:
     #     for i in range(len(motors)):
     #         motors[i].setVelocity(theta_dot[i])
             
-    if k == 72:
+    if k == 72:     # H
         print(AnsiCodes.CLEAR_SCREEN)
         
         print("Use these keys to drive the robot around.\nPress 'H' to show this help message.\n")
