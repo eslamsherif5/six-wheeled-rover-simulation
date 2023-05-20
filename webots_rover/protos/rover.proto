@@ -1,21 +1,19 @@
 #VRML_SIM R2023a utf8
 
 PROTO rover [
-#    field SFVec3f     translation    0 0 0
-#    field SFRotation  rotation       0 1 0 0
-#    field SFString    name           "rover"
-#    field SFString    model          "rover"
-#    field SFString    controller     "<none>"
-#    field MFString    controllerArgs []
-#    field SFNode      sensor1        NULL
-#    field SFNode      sensor2        NULL
-#    field SFNode      sensor3        NULL
-#    field SFNode      sensor4        NULL
-#    field SFBool      supervisor     FALSE
+   field SFVec3f     translation    0 0 0
+   field SFRotation  rotation       0 1 0 0
+   field SFString    name           "rover"
+   field SFString    model          "rover"
+   field SFString    controller     "<extern>"
+   field MFString    controllerArgs []
+   field SFBool      supervisor     FALSE
 ]
 
 {    
     Robot {
+    translation IS translation
+    rotation IS rotation
     children [
         DEF R_FRAME Transform {
         translation 0 0 0.63
@@ -73,8 +71,8 @@ PROTO rover [
                         axis 0 1 0
                         minStop -1.5708
                         maxStop 1.5708
-                        springConstant 100
-                        dampingConstant 100
+                        springConstant 200
+                        dampingConstant 200
                     }
                     device [
                         PositionSensor {
@@ -162,9 +160,10 @@ PROTO rover [
                                     device [
                                     RotationalMotor {
                                         name "whl1_drive_motor"
-                                        maxVelocity 50
-                                        maxTorque 100
-                                    }
+                                        
+                                        maxVelocity 100
+                                        maxTorque 250                                    
+                                        }
                                     PositionSensor {
                                         name "whl1_enc"
                                     }
@@ -198,7 +197,7 @@ PROTO rover [
                                     }
                                     physics DEF WHL_PHYS Physics {
                                         density -1
-                                        mass 20
+                                        mass 1
                                     }
                                     }
                                 }
@@ -212,8 +211,8 @@ PROTO rover [
                             DEF LEFT_BOGIE_JNT HingeJoint {
                                 jointParameters HingeJointParameters {
                                 axis 0 1 0
-                                minStop -1.5708
-                                maxStop 1.5708
+                                minStop -0.523598776
+                                maxStop 0.523598776
                                 springConstant 1
                                 dampingConstant 1
                                 staticFriction 1
@@ -249,8 +248,9 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl3_drive_motor"
-                                                maxVelocity 50
-                                                maxTorque 100
+                                                
+                                                maxVelocity 100
+                                                maxTorque 250                                                
                                                 }
                                                 PositionSensor {
                                                 name "whl3_enc"
@@ -283,8 +283,9 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl5_drive_motor"
-                                                maxVelocity 50
-                                                maxTorque 100
+                                                
+                                                maxVelocity 100
+                                                maxTorque 250                                                
                                                 }
                                                 PositionSensor {
                                                 name "whl5_enc"
@@ -461,7 +462,7 @@ PROTO rover [
                         ]
                         }
                         physics DEF ROCKER_PHYS Physics {
-                        density 3500
+                        density 9500
                         }
                     }
                     }
@@ -476,8 +477,8 @@ PROTO rover [
                         axis 0 1 0
                         minStop -1.5708
                         maxStop 1.5708
-                        springConstant 100
-                        dampingConstant 100
+                        springConstant 200
+                        dampingConstant 200
                     }
                     device [
                         PositionSensor {
@@ -551,9 +552,10 @@ PROTO rover [
                                     device [
                                     RotationalMotor {
                                         name "whl2_drive_motor"
-                                        maxVelocity 50
-                                        maxTorque 100
-                                    }
+                                        
+                                        maxVelocity 100
+                                        maxTorque 250                                    
+                                        }
                                     PositionSensor {
                                         name "whl2_enc"
                                     }
@@ -587,8 +589,8 @@ PROTO rover [
                             DEF RIGHT_BOGIE_JNT HingeJoint {
                                 jointParameters HingeJointParameters {
                                 axis 0 1 0
-                                minStop -1.5708
-                                maxStop 1.5708
+                                minStop -0.523598776
+                                maxStop 0.523598776
                                 springConstant 1
                                 dampingConstant 1
                                 staticFriction 1
@@ -623,8 +625,9 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl4_drive_motor"
-                                                maxVelocity 50
-                                                maxTorque 100
+                                                
+                                                maxVelocity 100
+                                                maxTorque 250                                                
                                                 }
                                                 PositionSensor {
                                                 name "whl4_enc"
@@ -656,8 +659,9 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl6_drive_motor"
-                                                maxVelocity 50
-                                                maxTorque 100
+                                                
+                                                maxVelocity 100
+                                                maxTorque 250                                                
                                                 }
                                                 PositionSensor {
                                                 name "whl6_enc"
@@ -852,6 +856,8 @@ PROTO rover [
         ]
         }
     ]
+    name IS name
+    model IS model
     boundingObject DEF BODY_BB Group {
         children [
         Transform {
@@ -868,9 +874,11 @@ PROTO rover [
     }
     physics Physics {
         centerOfMass [
-        0 0 0.475
+        0.025 0 0
         ]
     }
-    controller "<extern>"
+    controller IS controller
+    controllerArgs IS controllerArgs
+    supervisor IS supervisor
     }
 }

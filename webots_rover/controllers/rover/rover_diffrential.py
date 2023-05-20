@@ -101,18 +101,18 @@ class DiffrentialRover:
         return theta_dot
 
 
-rover = DiffrentialRover()
-rover.input.V = 0.0
-rover.input.omega = 0.0
-theta_dot = rover.whl_rolling_vel()
+# rover = DiffrentialRover()
+# rover.input.V = 0.0
+# rover.input.omega = 0.0
+# theta_dot = rover.whl_rolling_vel()
 
-if len(theta_dot) != 6:
-    print("Wheels rolling velocities were not calculated.")
-    time.sleep(0.1)
-    exit(1)
+# if len(theta_dot) != 6:
+#     print("Wheels rolling velocities were not calculated.")
+#     time.sleep(0.1)
+#     exit(1)
 
-for i in range(len(theta_dot)):
-    print('Rover Velcotiy v'+str(i) + ': ' + str(theta_dot[i]))
+# for i in range(len(theta_dot)):
+#     print('Rover Velcotiy v'+str(i) + ': ' + str(theta_dot[i]))
 
 # mp.plot(theta_dot)
 # mp.show()

@@ -62,12 +62,16 @@ print("\n\n\n")
 while robot.step(timestep) != -1:
     k = kb.getKey()
     if k == Keyboard.UP:
-        print("[ ↑ ] Moving forward ... V = " +
+        print("[ ↑ ] Increasing speed ... V = " +
               str(round(V + 0.1, 2)))
         # wait for a very little while
-        time.sleep(0.2)
+        time.sleep(0.15)
         # increase the speed
         V = V + 0.1
+        if (V > 0):
+            print("Moving forward")
+        elif (V < 0):
+            print("Moving reverse")
         rover.input.V = V
         # apply the new speed
         theta_dot = rover.whl_rolling_vel()
@@ -75,12 +79,17 @@ while robot.step(timestep) != -1:
             motors[i].setVelocity(theta_dot[i])
 
     if k == Keyboard.DOWN:
-        print("[ ↓ ] Moving reverse ... V = " +
+        print("[ ↓ ] Decreasing speed ... V = " +
               str(round(V - 0.1, 2)))
         # wait for a very little while
-        time.sleep(0.2)
+        time.sleep(0.15)
         # decrease the speed
         V = V - 0.1
+        if (V < 0):
+            print("Moving reverse")
+        elif V>0:
+            print("Moving forward")
+            
         rover.input.V = V
         # apply the new speed
         theta_dot = rover.whl_rolling_vel()
@@ -88,12 +97,16 @@ while robot.step(timestep) != -1:
             motors[i].setVelocity(theta_dot[i])
 
     if k == Keyboard.LEFT:
-        print("[ ← ] Turning left ... w = " +
+        print("[ ← ] Increasing yaw rate ... w = " +
               str(round(w + 0.1, 3)))
         # wait for a very little while
-        time.sleep(0.2)
+        time.sleep(0.15)
         # increase the speed
         w = w + 0.1
+        if (w > 0):
+            print("Turning left")
+        elif (w < 0):
+            print("Turning right")        
         rover.input.omega = w
         # apply the new speed
         theta_dot = rover.whl_rolling_vel()
@@ -101,12 +114,16 @@ while robot.step(timestep) != -1:
             motors[i].setVelocity(theta_dot[i])
 
     if k == Keyboard.RIGHT:
-        print("[ → ] Turning right ... w = " +
+        print("[ → ] Decreasing yaw rate ... w = " +
               str(round(w - 0.1, 3)))
         # wait for a very little while
-        time.sleep(0.2)
+        time.sleep(0.15)
         # decrease the speed
         w = w - 0.1
+        if (w < 0):
+            print("Turning right")        
+        elif (w > 0):
+            print("Turning left")
         rover.input.omega = w
         # apply the new speed
         theta_dot = rover.whl_rolling_vel()
@@ -115,7 +132,7 @@ while robot.step(timestep) != -1:
 
     if k == 83 or k == 32:  # S or Spacebar => Stop the robot
         print("[ S ] Stopping ... V = 0.0")
-        time.sleep(0.1)
+        time.sleep(0.15)
         rover.input.V = V = 0.0
         rover.input.omega = w = 0.0
         theta_dot = rover.whl_rolling_vel()
