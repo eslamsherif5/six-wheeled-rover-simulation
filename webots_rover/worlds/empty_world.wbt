@@ -21,8 +21,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.30412387446513883 -0.19691294628473557 0.9320589898529906 4.227559448963585
-  position 0.9738398592647194 2.8150417060747044 2.787297541020749
+  orientation -0.2733957742223207 -0.14596592111401188 0.9507621682159612 4.0810293695056155
+  position 1.6912240660915723 2.5542440645698 2.6626282896419555
 }
 TexturedBackground {
   skyColor [
@@ -60,6 +60,20 @@ Robot {
     DEF R_FRAME Transform {
       translation 0 0 0.63
       children [
+        DEF DIFF_BODY_LINK Solid {
+          translation -0.0955 0 0.1733
+          children [
+            Shape {
+            }
+          ]
+          name "solid(2)"
+          boundingObject DEF DIFF_BODY_LINK_SHP Cylinder {
+            height 0.026
+            radius 0.02
+          }
+          physics Physics {
+          }
+        }
         DEF TOP_DIFF_LINK_TF Transform {
           translation -0.0955 0 0.2115
           children [
@@ -97,6 +111,10 @@ Robot {
                 DEF LEFT_ROCKER_JNT HingeJoint {
                   jointParameters HingeJointParameters {
                     axis 0 1 0
+                    minStop -1.5708
+                    maxStop 1.5708
+                    springConstant 100
+                    dampingConstant 100
                   }
                   device [
                     PositionSensor {
@@ -494,6 +512,10 @@ Robot {
                 DEF RIGHT_ROCKER_JNT HingeJoint {
                   jointParameters HingeJointParameters {
                     axis 0 1 0
+                    minStop -1.5708
+                    maxStop 1.5708
+                    springConstant 100
+                    dampingConstant 100
                   }
                   device [
                     PositionSensor {
@@ -854,7 +876,7 @@ Robot {
           ]
         }
         DEF BODY_CAD_TF Transform {
-          translation 0 0 -0.175
+          translation 0.0065 0 -0.154725
           children [
             CadShape {
               url [

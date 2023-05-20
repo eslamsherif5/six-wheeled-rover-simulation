@@ -9,8 +9,8 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation 0.23317840456574018 0.15823073625109582 -0.9594742652878251 1.9092659475962996
-  position -3.5274389547399587 8.383789287273714 4.631748277547279
+  orientation 0.2034539029546893 0.8306076862479096 -0.5183602809999991 1.0487074079147864
+  position -4.7576452215161 4.531767445127378 7.990634550284294
   followSmoothness 0
 }
 TexturedBackground {
@@ -353,6 +353,4 @@ DEF SPHERES Solid {
   boundingObject USE BALLS
 }
 rover {
-  translation -6.17 0 -0.05
-  controller "<extern>"
 }
