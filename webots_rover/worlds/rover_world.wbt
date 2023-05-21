@@ -6,11 +6,22 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/project
 EXTERNPROTO "../protos/rover.proto"
 
 WorldInfo {
-  basicTimeStep 16
+  CFM 1e-06
+  ERP 0.18
+  basicTimeStep 8
+  contactProperties [
+    ContactProperties {
+      material2 "rubber"
+      coulombFriction [
+        150
+      ]
+    }
+  ]
 }
 Viewpoint {
-  orientation 0.2034539029546893 0.8306076862479096 -0.5183602809999991 1.0487074079147864
-  position -4.7576452215161 4.531767445127378 7.990634550284294
+  orientation 0.25161818876194936 0.3399639815973167 -0.9061527345324603 1.2354090632126327
+  position -3.334956506289627 10.50772073627613 6.124169029963219
+  follow "rover"
   followSmoothness 0
 }
 TexturedBackground {
@@ -18,7 +29,7 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 Floor {
-  size 20 20
+  size 40 40
   tileSize 1 1
   appearance PBRAppearance {
     baseColorMap ImageTexture {
@@ -220,7 +231,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -232,7 +243,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -244,7 +255,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -256,7 +267,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -268,7 +279,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -280,7 +291,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -292,7 +303,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -304,7 +315,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -316,7 +327,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -328,7 +339,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -340,7 +351,7 @@ DEF SPHERES Solid {
             Shape {
               appearance USE OBJECTS_APPEARANCE
               geometry Sphere {
-                radius 0.15
+                radius 0.18
                 subdivision 3
               }
             }
@@ -353,4 +364,5 @@ DEF SPHERES Solid {
   boundingObject USE BALLS
 }
 rover {
+  translation 0 0 -0.03
 }
