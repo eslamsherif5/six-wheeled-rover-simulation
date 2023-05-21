@@ -1,27 +1,39 @@
 #VRML_SIM R2023a utf8
 
 PROTO rover [
-   field SFVec3f     translation    0 0 0
-   field SFRotation  rotation       0 1 0 0
-   field SFString    name           "rover"
-   field SFString    model          "rover"
-   field SFString    controller     "<none>"
-   field MFString    controllerArgs []
-   field SFNode      sensor1        NULL
-   field SFNode      sensor2        NULL
-   field SFNode      sensor3        NULL
-   field SFNode      sensor4        NULL
-   field SFBool      supervisor     FALSE
+#    field SFVec3f     translation    0 0 0
+#    field SFRotation  rotation       0 1 0 0
+#    field SFString    name           "rover"
+#    field SFString    model          "rover"
+#    field SFString    controller     "<none>"
+#    field MFString    controllerArgs []
+#    field SFNode      sensor1        NULL
+#    field SFNode      sensor2        NULL
+#    field SFNode      sensor3        NULL
+#    field SFNode      sensor4        NULL
+#    field SFBool      supervisor     FALSE
 ]
 
 {    
     Robot {
-    translation IS translation
-    rotation IS rotation
     children [
         DEF R_FRAME Transform {
         translation 0 0 0.63
         children [
+            DEF DIFF_BODY_LINK Solid {
+            translation -0.0955 0 0.1733
+            children [
+                Shape {
+                }
+            ]
+            name "solid(2)"
+            boundingObject DEF DIFF_BODY_LINK_SHP Cylinder {
+                height 0.026
+                radius 0.02
+            }
+            physics Physics {
+            }
+            }
             DEF TOP_DIFF_LINK_TF Transform {
             translation -0.0955 0 0.2115
             children [
@@ -59,6 +71,10 @@ PROTO rover [
                     DEF LEFT_ROCKER_JNT HingeJoint {
                     jointParameters HingeJointParameters {
                         axis 0 1 0
+                        minStop -1.5708
+                        maxStop 1.5708
+                        springConstant 100
+                        dampingConstant 100
                     }
                     device [
                         PositionSensor {
@@ -91,7 +107,7 @@ PROTO rover [
                                         }
                                         endPoint Solid {
                                         translation 0.02 0 0.01
-                                        rotation 0 1 0 -1.5708
+                                        rotation 0 -1 0 1.5708
                                         children [
                                             Transform {
                                             translation 0 0 0.12
@@ -146,6 +162,7 @@ PROTO rover [
                                     device [
                                     RotationalMotor {
                                         name "whl1_drive_motor"
+                                        maxVelocity 50
                                         maxTorque 100
                                     }
                                     PositionSensor {
@@ -166,6 +183,7 @@ PROTO rover [
                                         }
                                     ]
                                     name "solid(1)"
+                                    contactMaterial "rubber"
                                     boundingObject DEF WHL_BB_GRP Group {
                                         children [
                                         Transform {
@@ -180,7 +198,7 @@ PROTO rover [
                                     }
                                     physics DEF WHL_PHYS Physics {
                                         density -1
-                                        mass 15
+                                        mass 20
                                     }
                                     }
                                 }
@@ -194,6 +212,11 @@ PROTO rover [
                             DEF LEFT_BOGIE_JNT HingeJoint {
                                 jointParameters HingeJointParameters {
                                 axis 0 1 0
+                                minStop -1.5708
+                                maxStop 1.5708
+                                springConstant 1
+                                dampingConstant 1
+                                staticFriction 1
                                 }
                                 device [
                                 PositionSensor {
@@ -226,6 +249,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl3_drive_motor"
+                                                maxVelocity 50
                                                 maxTorque 100
                                                 }
                                                 PositionSensor {
@@ -237,6 +261,7 @@ PROTO rover [
                                                 USE LEFT_WHL_CAD
                                                 ]
                                                 name "solid(2)"
+                                                contactMaterial "rubber"
                                                 boundingObject USE WHL_BB_GRP
                                                 physics USE WHL_PHYS
                                             }
@@ -258,6 +283,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl5_drive_motor"
+                                                maxVelocity 50
                                                 maxTorque 100
                                                 }
                                                 PositionSensor {
@@ -269,6 +295,7 @@ PROTO rover [
                                                 USE LEFT_WHL_CAD
                                                 ]
                                                 name "solid(1)"
+                                                contactMaterial "rubber"
                                                 boundingObject USE WHL_BB_GRP
                                                 physics USE WHL_PHYS
                                             }
@@ -356,6 +383,7 @@ PROTO rover [
                                     ]
                                 }
                                 physics DEF BOGIE_PHYS Physics {
+                                    density 35000
                                 }
                                 }
                             }
@@ -433,6 +461,7 @@ PROTO rover [
                         ]
                         }
                         physics DEF ROCKER_PHYS Physics {
+                        density 3500
                         }
                     }
                     }
@@ -445,6 +474,10 @@ PROTO rover [
                     DEF RIGHT_ROCKER_JNT HingeJoint {
                     jointParameters HingeJointParameters {
                         axis 0 1 0
+                        minStop -1.5708
+                        maxStop 1.5708
+                        springConstant 100
+                        dampingConstant 100
                     }
                     device [
                         PositionSensor {
@@ -477,6 +510,7 @@ PROTO rover [
                                         anchor 0 0 0.02
                                         }
                                         endPoint Solid {
+                                        rotation 0 1 0 0
                                         children [
                                             Transform {
                                             translation 0 0 0.12
@@ -517,6 +551,7 @@ PROTO rover [
                                     device [
                                     RotationalMotor {
                                         name "whl2_drive_motor"
+                                        maxVelocity 50
                                         maxTorque 100
                                     }
                                     PositionSensor {
@@ -537,6 +572,7 @@ PROTO rover [
                                         }
                                     ]
                                     name "solid(1)"
+                                    contactMaterial "rubber"
                                     boundingObject USE WHL_BB_GRP
                                     physics USE WHL_PHYS
                                     }
@@ -551,6 +587,11 @@ PROTO rover [
                             DEF RIGHT_BOGIE_JNT HingeJoint {
                                 jointParameters HingeJointParameters {
                                 axis 0 1 0
+                                minStop -1.5708
+                                maxStop 1.5708
+                                springConstant 1
+                                dampingConstant 1
+                                staticFriction 1
                                 }
                                 device [
                                 PositionSensor {
@@ -582,6 +623,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl4_drive_motor"
+                                                maxVelocity 50
                                                 maxTorque 100
                                                 }
                                                 PositionSensor {
@@ -592,6 +634,7 @@ PROTO rover [
                                                 children [
                                                 USE RIGHT_WHL_CAD
                                                 ]
+                                                contactMaterial "rubber"
                                                 boundingObject USE WHL_BB_GRP
                                                 physics USE WHL_PHYS
                                             }
@@ -613,6 +656,7 @@ PROTO rover [
                                             device [
                                                 RotationalMotor {
                                                 name "whl6_drive_motor"
+                                                maxVelocity 50
                                                 maxTorque 100
                                                 }
                                                 PositionSensor {
@@ -624,6 +668,7 @@ PROTO rover [
                                                 USE RIGHT_WHL_CAD
                                                 ]
                                                 name "solid(1)"
+                                                contactMaterial "rubber"
                                                 boundingObject USE WHL_BB_GRP
                                                 physics USE WHL_PHYS
                                             }
@@ -633,7 +678,83 @@ PROTO rover [
                                     ]
                                     }
                                 ]
-                                boundingObject USE BOGIE_BB_GRP
+                                boundingObject DEF BOGIE_BB_GRP Group {
+                                    children [
+                                    Transform {
+                                        rotation 1 0 0 -1.5707996938995747
+                                        children [
+                                        Shape {
+                                            geometry Cylinder {
+                                            height 0.05
+                                            radius 0.04
+                                            }
+                                        }
+                                        ]
+                                    }
+                                    Transform {
+                                        translation -0.146 0 -0.0772
+                                        rotation 0 1 0 -0.485
+                                        children [
+                                        Shape {
+                                            geometry Box {
+                                            size 0.26 0.05 0.026
+                                            }
+                                        }
+                                        ]
+                                    }
+                                    Transform {
+                                        translation 0.147 0 -0.0775
+                                        rotation 0 1 0 0.485
+                                        children [
+                                        Shape {
+                                            geometry Box {
+                                            size 0.26 0.05 0.026
+                                            }
+                                        }
+                                        ]
+                                    }
+                                    Transform {
+                                        translation -0.334 0 -0.141
+                                        children [
+                                        Shape {
+                                            geometry Box {
+                                            size 0.17 0.057 0.21
+                                            }
+                                        }
+                                        ]
+                                    }
+                                    Transform {
+                                        translation 0.334 0 -0.141
+                                        children [
+                                        Shape {
+                                            geometry Box {
+                                            size 0.17 0.057 0.21
+                                            }
+                                        }
+                                        ]
+                                    }
+                                    Transform {
+                                        translation 0.353 0.095 -0.3535
+                                        children [
+                                        Shape {
+                                            geometry Box {
+                                            size 0.06 0.091 0.27
+                                            }
+                                        }
+                                        ]
+                                    }
+                                    Transform {
+                                        translation -0.3145 0.095 -0.3535
+                                        children [
+                                        Shape {
+                                            geometry Box {
+                                            size 0.06 0.091 0.27
+                                            }
+                                        }
+                                        ]
+                                    }
+                                    ]
+                                }
                                 physics USE BOGIE_PHYS
                                 }
                             }
@@ -699,6 +820,16 @@ PROTO rover [
                                 }
                             ]
                             }
+                            Transform {
+                            translation 0.4789 0.095 -0.44
+                            children [
+                                Shape {
+                                geometry Box {
+                                    size 0.06 0.091 0.27
+                                }
+                                }
+                            ]
+                            }
                         ]
                         }
                         physics USE ROCKER_PHYS
@@ -709,7 +840,7 @@ PROTO rover [
             ]
             }
             DEF BODY_CAD_TF Transform {
-            translation 0 0 -0.175
+            translation 0.0065 0 -0.154725
             children [
                 CadShape {
                 url [
@@ -720,13 +851,7 @@ PROTO rover [
             }
         ]
         }
-        Slot {endPoint IS sensor1}
-        Slot {endPoint IS sensor2}
-        Slot {endPoint IS sensor3}
-        Slot {endPoint IS sensor4}
     ]
-    name IS name
-    model IS model
     boundingObject DEF BODY_BB Group {
         children [
         Transform {
@@ -742,14 +867,10 @@ PROTO rover [
         ]
     }
     physics Physics {
-        density -1
-        mass 80
         centerOfMass [
         0 0 0.475
         ]
     }
-    controller IS controller
-    controllerArgs IS controllerArgs
-    supervisor IS supervisor
+    controller "<extern>"
     }
 }

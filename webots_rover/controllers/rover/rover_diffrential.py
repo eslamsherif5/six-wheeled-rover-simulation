@@ -5,6 +5,7 @@ import numpy as np
 # from tictoc import tic, toc
 import time
 
+
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
     __getattr__ = dict.get
@@ -52,6 +53,8 @@ class DiffrentialRover:
         self.rot_radii.r2 = 0.0  # rotation radius of wheel 2
         self.rot_radii.r46 = 0.0  # rotation radius of wheels 4,6
 
+        self.verbose = False
+
     def calc_rotation_radii(self):
         # ICR redius calcuation
         self.rot_radii.r = self.input.V / self.input.omega
@@ -63,8 +66,9 @@ class DiffrentialRover:
         self.rot_radii.r46 = self.rot_radii.r + self.dims.k3 + self.dims.k3bar
 
     def whl_rolling_vel(self):
-        if self.input.omega == 0.0 and self.input.V != 0.0: 
-            print("Omega is set to 0. Moving in a straight line.")
+        if self.input.omega == 0.0 and self.input.V != 0.0:
+            if self.verbose:
+                print("Omega is set to 0. Moving in a straight line.")
             time.sleep(0.1)
             theta_dot = list()
             for i in range(6):
@@ -73,21 +77,29 @@ class DiffrentialRover:
             return theta_dot
 
         if self.input.V == 0.0 and self.input.omega == 0.0:
-            print("V and omega are set to 0.")
+            if self.verbose:
+                print("V and omega are set to 0.")
             time.sleep(0.1)
             return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        
+
         self.calc_rotation_radii()
         # Velcoity calcuation for the rover
         theta_dot = list()
-        theta_dot.append((self.rot_radii.r1 * self.input.omega) / self.dims.k10)
-        theta_dot.append((self.rot_radii.r2 * self.input.omega) / self.dims.k10)
-        theta_dot.append((self.rot_radii.r35 * self.input.omega) / self.dims.k10)
-        theta_dot.append((self.rot_radii.r46 * self.input.omega) / self.dims.k10)
-        theta_dot.append((self.rot_radii.r35 * self.input.omega) / self.dims.k10)
-        theta_dot.append((self.rot_radii.r46 * self.input.omega) / self.dims.k10)
+        theta_dot.append(
+            (self.rot_radii.r1 * self.input.omega) / self.dims.k10)
+        theta_dot.append(
+            (self.rot_radii.r2 * self.input.omega) / self.dims.k10)
+        theta_dot.append(
+            (self.rot_radii.r35 * self.input.omega) / self.dims.k10)
+        theta_dot.append(
+            (self.rot_radii.r46 * self.input.omega) / self.dims.k10)
+        theta_dot.append(
+            (self.rot_radii.r35 * self.input.omega) / self.dims.k10)
+        theta_dot.append(
+            (self.rot_radii.r46 * self.input.omega) / self.dims.k10)
 
         return theta_dot
+
 
 rover = DiffrentialRover()
 rover.input.V = 0.0
